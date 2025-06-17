@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func main() {
+func GetCurrentTime() {
 	currentTime := time.Now()
 	fmt.Println("Current time is =", currentTime)
 }
