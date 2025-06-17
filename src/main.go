@@ -5,9 +5,10 @@ import (
 	"time"
 )
 
-func GetCurrentTime() {
-	currentTime := time.Now()
-	fmt.Println("Current time is =", currentTime)
+func GetCurrentTime() (string, int) {
+	timex := time.Now().String()
+	_, _, day := time.Now().Date()
+	return timex, day
 }
 
 func GetCurrentDate() {
