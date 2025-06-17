@@ -7,5 +7,5 @@ import (
 
 func main() {
 	currentTime := time.Now()
-	fmt.Println("Current time =", currentTime)
+	fmt.Println("Current time is =", currentTime)
 }
