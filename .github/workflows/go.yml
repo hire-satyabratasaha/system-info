@@ -27,18 +27,5 @@ jobs:
     - name: Test
       run: go test -v ./...
 
-    - name: Bump version and create tag
-      id: tag
-      uses: mathops/git-tag-action@v1
-      with:
-        tag_prefix: 'v'
-        # or you can compute a new tag number here
-        # tag: 'v1.0.${{github.run_number}}'
-
-    - name: Push tag
-      uses: ad-m/github-push-action@v0.1.0
-      with:
-        tag: ${{steps.tag.outputs.new_tag}}
-
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+    - name: Get previous tag
+      run: git describe --tags --abbrev=0
