@@ -29,9 +29,42 @@ jobs:
     - name: Test
       run: go test -v ./...
 
+    - name: Configure Git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
     - name: Get the latest tag
       id: get_tag
-      run: echo "LATEST_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+      run: |
+        if tag=$(git describe --tags --abbrev=0 2>/dev/null); then
+          echo "LATEST_TAG=$tag" >> $GITHUB_ENV
+        else
+          echo "LATEST_TAG=v1.0.0" >> $GITHUB_ENV
+        fi
 
-    - name: Display the latest tag
-      run: echo "The latest tag is $LATEST_TAG"
+    - name: Bump tag
+      id: bump_tag
+      run: |
+        # Strip the 'v'
+        base=${LATEST_TAG#v}
+
+        # Split into major, minor, patch
+        IFS='.' read -r major minor patch <<< "$base"
+
+        # Increment patch
+        patch=$((patch + 1))
+
+        NEW_TAG="v${major}.${minor}.${patch}"
+
+        echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+
+    - name: Create new tag
+      run: |
+        git tag $NEW_TAG
+        git push origin $NEW_TAG
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+
+    - name: Confirm new tag
+      run: echo "Created and pushed new tag $NEW_TAG"
