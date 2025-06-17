@@ -27,5 +27,9 @@ jobs:
     - name: Test
       run: go test -v ./...
 
-    - name: Get previous tag
-      run: git describe --tags --abbrev=0
+    - name: Get the latest tag
+      id: get_tag
+      run: echo "LATEST_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
+    - name: Display the latest tag
+      run: echo "The latest tag is $LATEST_TAG"
